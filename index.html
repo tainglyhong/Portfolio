@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Taing Lyhong — Software Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0a0a0a;
+    --soft-black:#161616;
+    --white:#ffffff;
+    --paper:#f7f7f5;
+    --gray:#8a8a8a;
+    --gray-light:#c9c9c7;
+    --hairline:#e4e4e1;
+    --display: 'Space Grotesk', sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+    --body: 'Inter', sans-serif;
+    --max: 1040px;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--body);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; scroll-behavior:auto !important;}
+  }
+
+  a{color:inherit;}
+  ::selection{background:var(--ink); color:var(--white);}
+
+  .wrap{max-width:var(--max); margin:0 auto; padding:0 32px;}
+
+  /* ---------- NAV ---------- */
+  nav{
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    background:rgba(247,247,245,0.82);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--hairline);
+    transition:border-color .3s ease;
+  }
+  nav .wrap{display:flex; align-items:center; justify-content:space-between; height:64px;}
+  .logo{font-family:var(--mono); font-weight:600; font-size:14px; letter-spacing:0.02em;}
+  .logo .cursor-blink{display:inline-block; width:8px; height:14px; background:var(--ink); margin-left:2px; animation:blink 1s steps(1) infinite; vertical-align:-2px;}
+  .nav-links{display:flex; gap:32px; list-style:none; font-family:var(--mono); font-size:12px; letter-spacing:0.03em; text-transform:uppercase;}
+  .nav-links a{text-decoration:none; position:relative; padding-bottom:3px; color:var(--soft-black); transition:color .25s;}
+  .nav-links a::after{content:''; position:absolute; left:0; bottom:0; width:0; height:1px; background:var(--ink); transition:width .3s cubic-bezier(.65,0,.35,1);}
+  .nav-links a:hover::after{width:100%;}
+  .nav-toggle{display:none; flex-direction:column; gap:5px; background:none; border:none; cursor:pointer; padding:8px;}
+  .nav-toggle span{width:22px; height:2px; background:var(--ink); transition:transform .3s, opacity .3s;}
+
+  /* ---------- HERO / TERMINAL ---------- */
+  header.hero{
+    min-height:100vh;
+    display:flex; align-items:center;
+    padding-top:64px;
+    position:relative;
+  }
+  .terminal{
+    width:100%;
+    background:var(--ink);
+    color:#e8e8e6;
+    border-radius:10px;
+    box-shadow:0 30px 80px -20px rgba(0,0,0,0.35);
+    overflow:hidden;
+    opacity:0;
+    transform:translateY(24px);
+    animation:riseIn .8s cubic-bezier(.16,1,.3,1) .15s forwards;
+  }
+  .term-bar{
+    display:flex; align-items:center; gap:8px;
+    padding:12px 16px;
+    background:#1c1c1c;
+    border-bottom:1px solid #2a2a2a;
+  }
+  .dot{width:10px; height:10px; border-radius:50%; background:#3a3a3a;}
+  .term-title{margin-left:8px; font-family:var(--mono); font-size:11px; color:#6b6b6b; letter-spacing:.02em;}
+  .term-body{padding:36px 40px 44px; font-family:var(--mono);}
+  .term-line{font-size:13px; color:#7a7a7a; margin-bottom:6px;}
+  .term-line .prompt{color:#e8e8e6;}
+  h1.term-name{
+    font-family:var(--display);
+    font-weight:700;
+    font-size:clamp(2.4rem, 6.4vw, 5.2rem);
+    line-height:1.02;
+    letter-spacing:-0.02em;
+    color:var(--white);
+    margin:10px 0 18px;
+    white-space:nowrap;
+    overflow:hidden;
+    border-right:3px solid var(--white);
+    width:0;
+    animation:typeName 1.4s steps(20,end) .9s forwards, blinkCaret .8s step-end infinite;
+  }
+  .term-roles{font-size:15px; color:#a8a8a6; margin-bottom:26px; opacity:0; animation:fadeUp .6s ease 2.4s forwards;}
+  .term-roles .sep{color:#4a4a4a; margin:0 8px;}
+  .term-summary{
+    max-width:640px; font-family:var(--body); font-size:14.5px; line-height:1.75;
+    color:#b8b8b6; margin-bottom:30px; opacity:0; animation:fadeUp .6s ease 2.6s forwards;
+  }
+  .term-cta{display:flex; gap:14px; flex-wrap:wrap; opacity:0; animation:fadeUp .6s ease 2.8s forwards;}
+  .btn{
+    font-family:var(--mono); font-size:12.5px; letter-spacing:.02em;
+    padding:12px 22px; border-radius:5px; text-decoration:none;
+    display:inline-flex; align-items:center; gap:8px;
+    transition:transform .25s cubic-bezier(.65,0,.35,1), background .25s, color .25s, border-color .25s;
+  }
+  .btn-primary{background:var(--white); color:var(--ink);}
+  .btn-primary:hover{transform:translateY(-2px); background:#e8e8e6;}
+  .btn-ghost{border:1px solid #3a3a3a; color:#d8d8d6;}
+  .btn-ghost:hover{transform:translateY(-2px); border-color:#6a6a6a; color:var(--white);}
+
+  .scroll-hint{
+    position:absolute; bottom:36px; left:50%; transform:translateX(-50%);
+    font-family:var(--mono); font-size:11px; color:var(--gray);
+    display:flex; flex-direction:column; align-items:center; gap:8px;
+    opacity:0; animation:fadeUp .6s ease 3.2s forwards;
+  }
+  .scroll-hint .line{width:1px; height:26px; background:var(--gray-light); position:relative; overflow:hidden;}
+  .scroll-hint .line::after{content:''; position:absolute; top:-100%; left:0; width:100%; height:100%; background:var(--ink); animation:scrollLine 1.8s ease-in-out infinite;}
+
+  @keyframes riseIn{to{opacity:1; transform:translateY(0);}}
+  @keyframes fadeUp{from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);}}
+  @keyframes typeName{from{width:0;} to{width:100%;}}
+  @keyframes blinkCaret{50%{border-color:transparent;}}
+  @keyframes blink{50%{opacity:0;}}
+  @keyframes scrollLine{0%{top:-100%;} 50%{top:0%;} 100%{top:100%;}}
+
+  /* ---------- SECTION SCAFFOLDING ---------- */
+  section{padding:120px 0;}
+  section.tight{padding:90px 0;}
+  .eyebrow{
+    font-family:var(--mono); font-size:12px; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--gray); display:flex; align-items:center; gap:10px; margin-bottom:14px;
+  }
+  .eyebrow::before{content:''; width:22px; height:1px; background:var(--gray-light);}
+  h2.section-title{
+    font-family:var(--display); font-weight:700; font-size:clamp(1.8rem,4vw,2.7rem);
+    letter-spacing:-0.015em; margin-bottom:20px;
+  }
+  .section-head{max-width:640px; margin-bottom:56px;}
+  .section-sub{color:var(--gray); font-size:15px; max-width:560px;}
+
+  .reveal{opacity:0; transform:translateY(28px); transition:opacity .7s cubic-bezier(.16,1,.3,1), transform .7s cubic-bezier(.16,1,.3,1);}
+  .reveal.in-view{opacity:1; transform:translateY(0);}
+  .reveal-stagger > *{opacity:0; transform:translateY(22px); transition:opacity .6s cubic-bezier(.16,1,.3,1), transform .6s cubic-bezier(.16,1,.3,1);}
+  .reveal-stagger.in-view > *{opacity:1; transform:translateY(0);}
+  .reveal-stagger.in-view > *:nth-child(1){transition-delay:.02s;}
+  .reveal-stagger.in-view > *:nth-child(2){transition-delay:.09s;}
+  .reveal-stagger.in-view > *:nth-child(3){transition-delay:.16s;}
+  .reveal-stagger.in-view > *:nth-child(4){transition-delay:.23s;}
+  .reveal-stagger.in-view > *:nth-child(5){transition-delay:.3s;}
+  .reveal-stagger.in-view > *:nth-child(6){transition-delay:.37s;}
+  .reveal-stagger.in-view > *:nth-child(7){transition-delay:.44s;}
+
+  /* ---------- ABOUT ---------- */
+  .about-grid{display:grid; grid-template-columns:1.1fr .9fr; gap:60px; align-items:start;}
+  .about-text p{color:#3a3a3a; font-size:15.5px; margin-bottom:16px;}
+  .about-text strong{color:var(--ink); font-weight:600;}
+  .stat-list{display:flex; flex-direction:column; gap:0; border-top:1px solid var(--hairline);}
+  .stat-item{display:flex; justify-content:space-between; align-items:baseline; padding:18px 0; border-bottom:1px solid var(--hairline);}
+  .stat-num{font-family:var(--display); font-weight:700; font-size:2rem; letter-spacing:-0.02em;}
+  .stat-label{font-family:var(--mono); font-size:11.5px; color:var(--gray); text-transform:uppercase; letter-spacing:.05em; text-align:right;}
+
+  /* ---------- SKILLS ---------- */
+  .skills-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--hairline); border:1px solid var(--hairline);}
+  .skill-card{background:var(--paper); padding:28px 26px; transition:background .35s ease;}
+  .skill-card:hover{background:var(--ink); color:var(--white);}
+  .skill-card:hover .skill-tag{color:#a8a8a6;}
+  .skill-card:hover .skill-head{color:var(--white);}
+  .skill-head{font-family:var(--mono); font-size:12px; text-transform:uppercase; letter-spacing:.06em; color:var(--gray); margin-bottom:14px; transition:color .35s;}
+  .skill-tags{display:flex; flex-wrap:wrap; gap:8px 10px;}
+  .skill-tag{font-size:14px; color:var(--soft-black); transition:color .35s;}
+  .skill-tag:not(:last-child)::after{content:'·'; margin-left:10px; color:var(--gray-light);}
+
+  /* ---------- EXPERIENCE TIMELINE ---------- */
+  .timeline{position:relative; padding-left:32px;}
+  .timeline::before{content:''; position:absolute; left:0; top:6px; bottom:6px; width:1px; background:var(--hairline);}
+  .tl-item{position:relative; padding-bottom:52px;}
+  .tl-item:last-child{padding-bottom:0;}
+  .tl-dot{position:absolute; left:-32px; top:5px; width:9px; height:9px; border-radius:50%; background:var(--ink); transform:translateX(-4.5px);}
+  .tl-dot::after{content:''; position:absolute; inset:-6px; border:1px solid var(--hairline); border-radius:50%;}
+  .tl-date{font-family:var(--mono); font-size:11.5px; color:var(--gray); text-transform:uppercase; letter-spacing:.05em; margin-bottom:6px;}
+  .tl-role{font-family:var(--display); font-weight:600; font-size:1.2rem; margin-bottom:2px;}
+  .tl-org{font-size:13.5px; color:var(--gray); margin-bottom:14px;}
+  .tl-list{list-style:none; display:flex; flex-direction:column; gap:8px;}
+  .tl-list li{font-size:14.5px; color:#3a3a3a; padding-left:16px; position:relative;}
+  .tl-list li::before{content:'—'; position:absolute; left:0; color:var(--gray-light);}
+
+  /* ---------- PROJECTS ---------- */
+  .proj-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:22px;}
+  .proj-card{
+    border:1px solid var(--hairline); border-radius:10px; padding:30px 28px;
+    background:var(--white); position:relative; overflow:hidden;
+    transition:border-color .3s ease, transform .3s cubic-bezier(.65,0,.35,1), box-shadow .3s ease;
+  }
+  .proj-card::before{
+    content:''; position:absolute; inset:0; border-radius:10px;
+    padding:1px; background:linear-gradient(135deg, var(--ink), transparent 40%);
+    -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor; mask-composite:exclude;
+    opacity:0; transition:opacity .35s ease;
+  }
+  .proj-card:hover{transform:translateY(-4px); box-shadow:0 20px 40px -18px rgba(0,0,0,.25);}
+  .proj-card:hover::before{opacity:1;}
+  .proj-top{display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px; gap:12px;}
+  .proj-name{font-family:var(--display); font-weight:600; font-size:1.15rem;}
+  .proj-link{font-family:var(--mono); font-size:11px; color:var(--gray); text-decoration:none; white-space:nowrap; border-bottom:1px solid transparent; transition:color .25s, border-color .25s;}
+  .proj-link:hover{color:var(--ink); border-color:var(--ink);}
+  .proj-desc{font-size:14px; color:#4a4a4a; margin-bottom:16px;}
+  .proj-stack{display:flex; flex-wrap:wrap; gap:6px;}
+  .stack-chip{font-family:var(--mono); font-size:10.5px; padding:4px 9px; border:1px solid var(--hairline); border-radius:20px; color:var(--gray);}
+
+  /* ---------- EDUCATION / CERTS ---------- */
+  .split{display:grid; grid-template-columns:1fr 1fr; gap:60px;}
+  .edu-item{margin-bottom:28px;}
+  .edu-item:last-child{margin-bottom:0;}
+  .edu-school{font-family:var(--display); font-weight:600; font-size:1.05rem; margin-bottom:3px;}
+  .edu-degree{font-size:14px; color:#3a3a3a; margin-bottom:3px;}
+  .edu-date{font-family:var(--mono); font-size:11.5px; color:var(--gray);}
+  .cert-list{list-style:none; display:flex; flex-direction:column; gap:14px;}
+  .cert-list li{font-size:14px; color:#3a3a3a; padding-bottom:14px; border-bottom:1px solid var(--hairline); display:flex; gap:10px;}
+  .cert-list li:last-child{border-bottom:none;}
+  .cert-list li::before{content:'✓'; font-family:var(--mono); color:var(--ink); flex-shrink:0;}
+
+  /* ---------- LANGUAGES ---------- */
+  .lang-row{display:flex; flex-direction:column; gap:20px;}
+  .lang-item{display:flex; align-items:center; gap:20px;}
+  .lang-name{font-family:var(--mono); font-size:13px; width:150px; flex-shrink:0;}
+  .lang-bar{flex:1; height:2px; background:var(--hairline); position:relative; overflow:hidden;}
+  .lang-bar-fill{position:absolute; left:0; top:0; height:100%; background:var(--ink); width:0; transition:width 1.2s cubic-bezier(.16,1,.3,1);}
+  .lang-level{font-family:var(--mono); font-size:11px; color:var(--gray); width:90px; text-align:right; flex-shrink:0;}
+
+  /* ---------- CONTACT / FOOTER ---------- */
+  footer{background:var(--ink); color:#e8e8e6; padding:110px 0 40px;}
+  .contact-title{font-family:var(--display); font-weight:700; font-size:clamp(2rem,5vw,3.4rem); letter-spacing:-0.02em; margin-bottom:26px; max-width:680px;}
+  .contact-links{display:flex; flex-wrap:wrap; gap:16px; margin-bottom:80px;}
+  .contact-links a{
+    font-family:var(--mono); font-size:13px; padding:12px 20px; border:1px solid #2e2e2e; border-radius:30px;
+    text-decoration:none; color:#d8d8d6; transition:background .25s, color .25s, border-color .25s;
+  }
+  .contact-links a:hover{background:var(--white); color:var(--ink); border-color:var(--white);}
+  .footer-bottom{display:flex; justify-content:space-between; align-items:center; padding-top:28px; border-top:1px solid #2a2a2a; font-family:var(--mono); font-size:11.5px; color:#6b6b6b; flex-wrap:wrap; gap:12px;}
+
+  @media (max-width:860px){
+    .about-grid, .split{grid-template-columns:1fr; gap:40px;}
+    .skills-grid{grid-template-columns:repeat(2,1fr);}
+    .proj-grid{grid-template-columns:1fr;}
+  }
+  @media (max-width:640px){
+    .nav-links{position:fixed; top:64px; left:0; right:0; background:var(--paper); flex-direction:column; gap:0; border-bottom:1px solid var(--hairline); max-height:0; overflow:hidden; transition:max-height .35s ease;}
+    .nav-links.open{max-height:320px;}
+    .nav-links a{padding:16px 32px; display:block; width:100%;}
+    .nav-toggle{display:flex;}
+    .term-body{padding:26px 20px 32px;}
+    h1.term-name{white-space:normal; width:auto; border-right:none; animation:fadeUp .6s ease .9s forwards;}
+    .skills-grid{grid-template-columns:1fr;}
+    section{padding:80px 0;}
+    .lang-name{width:110px;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="logo">taing<span style="color:var(--gray)">.</span>lyhong<span class="cursor-blink"></span></div>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#about">About</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#education">Education</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="terminal">
+      <div class="term-bar">
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        <span class="term-title">taing@lyhong — ~ — zsh</span>
+      </div>
+      <div class="term-body">
+        <div class="term-line"><span class="prompt">$</span> whoami</div>
+        <h1 class="term-name">Taing Lyhong</h1>
+        <div class="term-roles">Software Developer<span class="sep">/</span>Web Developer<span class="sep">/</span>Lecturer</div>
+        <p class="term-summary">Software developer with 3+ years building and teaching web systems — Laravel, PHP, MySQL, React and Flutter — from payment-integrated ticketing platforms to university coursework. Based in Sihanoukville, Cambodia.</p>
+        <div class="term-cta">
+          <a href="#projects" class="btn btn-primary">View projects →</a>
+          <a href="#contact" class="btn btn-ghost">Get in touch</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-hint"><span>scroll</span><div class="line"></div></div>
+</header>
+
+<section id="about">
+  <div class="wrap">
+    <div class="about-grid">
+      <div class="about-text reveal">
+        <div class="eyebrow">01 — About</div>
+        <h2 class="section-title">Building systems,<br>teaching the ones<br>who'll build the next.</h2>
+        <p>Over the past three years I've moved between two roles that inform each other: shipping <strong>production Laravel and PHP applications</strong> for real businesses, and <strong>lecturing undergraduate Computer Science</strong> at Life University — programming, databases, and software engineering.</p>
+        <p>I've integrated payment gateways, deployed and secured production infrastructure, and built everything from POS systems to REST-backed mobile apps. Strong on database design, query optimization, and the unglamorous parts of testing and maintenance that keep systems reliable.</p>
+      </div>
+      <div class="reveal-stagger reveal">
+        <div class="stat-list">
+          <div class="stat-item"><span class="stat-num">3+</span><span class="stat-label">Years of<br>experience</span></div>
+          <div class="stat-item"><span class="stat-num">5</span><span class="stat-label">Shipped<br>platforms</span></div>
+          <div class="stat-item"><span class="stat-num">2</span><span class="stat-label">Years<br>lecturing</span></div>
+          <div class="stat-item"><span class="stat-num">3</span><span class="stat-label">Languages<br>spoken</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="skills" class="tight">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">02 — Skills</div>
+      <h2 class="section-title">Technical toolkit</h2>
+      <p class="section-sub">From server-side logic to sensor wiring — the stack I reach for depends on the problem.</p>
+    </div>
+    <div class="skills-grid reveal-stagger reveal">
+      <div class="skill-card">
+        <div class="skill-head">Programming</div>
+        <div class="skill-tags"><span class="skill-tag">PHP</span><span class="skill-tag">Java</span><span class="skill-tag">C/C++</span><span class="skill-tag">Python</span><span class="skill-tag">JavaScript</span></div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-head">Web Development</div>
+        <div class="skill-tags"><span class="skill-tag">Laravel</span><span class="skill-tag">React</span><span class="skill-tag">HTML/CSS</span><span class="skill-tag">Bootstrap</span><span class="skill-tag">Tailwind</span><span class="skill-tag">Node.js</span></div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-head">Mobile</div>
+        <div class="skill-tags"><span class="skill-tag">Flutter</span><span class="skill-tag">Dart</span><span class="skill-tag">Firebase</span></div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-head">Database</div>
+        <div class="skill-tags"><span class="skill-tag">MySQL</span><span class="skill-tag">SQLite</span><span class="skill-tag">PostgreSQL</span><span class="skill-tag">Schema design</span><span class="skill-tag">Query optimization</span></div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-head">IoT & Hardware</div>
+        <div class="skill-tags"><span class="skill-tag">Arduino</span><span class="skill-tag">Sensor integration</span><span class="skill-tag">Hardware–software integration</span></div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-head">Cloud & Testing</div>
+        <div class="skill-tags"><span class="skill-tag">Cloudflare</span><span class="skill-tag">cPanel</span><span class="skill-tag">DNS</span><span class="skill-tag">UAT</span><span class="skill-tag">Regression</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="experience">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">03 — Experience</div>
+      <h2 class="section-title">Where I've worked</h2>
+    </div>
+    <div class="timeline reveal-stagger reveal">
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-date">January 2025 — Present</div>
+        <div class="tl-role">Lecturer of Computer Science</div>
+        <div class="tl-org">Life University, Sihanoukville, Cambodia</div>
+        <ul class="tl-list">
+          <li>Teach undergraduate courses spanning programming, database systems, web development and software engineering.</li>
+          <li>Prepare course materials, assignments, examinations and practical lab exercises.</li>
+          <li>Mentor students through software projects and technical problem-solving.</li>
+        </ul>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-date">May 2024 — December 2025</div>
+        <div class="tl-role">Lecturer of Computer Science (Part-time)</div>
+        <div class="tl-org">Life University, Sihanoukville, Cambodia</div>
+        <ul class="tl-list">
+          <li>Delivered lectures and lab sessions across programming, database design and web development.</li>
+          <li>Built and maintained the Life Football Club e-ticketing platform with Laravel and related tech.</li>
+          <li>Developed fctickets.lifeun.edu.kh using Laravel, PHP, MySQL, JavaScript, AJAX, jQuery, Blade and ABA PayWay.</li>
+        </ul>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-date">January 2023 — January 2025</div>
+        <div class="tl-role">Web Developer</div>
+        <div class="tl-org">Life University, Sihanoukville, Cambodia</div>
+        <ul class="tl-list">
+          <li>Developed and maintained the university website on WordPress.</li>
+          <li>Built multiple business web applications with Laravel, PHP, MySQL, AJAX, jQuery, Tailwind, APIs and a Telegram bot.</li>
+          <li>Gathered requirements with stakeholders and led interface design, testing and debugging.</li>
+        </ul>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-date">July 2022 — 2025</div>
+        <div class="tl-role">Chinese Teacher (Part-time)</div>
+        <div class="tl-org">Tai Zhong Chinese Center, Sihanoukville, Cambodia</div>
+        <ul class="tl-list">
+          <li>Taught Mandarin to children and adult groups, tailoring lesson plans to learner level.</li>
+          <li>Guided practice across speaking, listening, reading and writing.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="projects" class="tight">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">04 — Projects</div>
+      <h2 class="section-title">Selected work</h2>
+    </div>
+    <div class="proj-grid reveal-stagger reveal">
+      <div class="proj-card">
+        <div class="proj-top">
+          <span class="proj-name">FC Tickets</span>
+          <a class="proj-link" href="https://fctickets.lifeun.edu.kh" target="_blank" rel="noopener">fctickets.lifeun.edu.kh ↗</a>
+        </div>
+        <p class="proj-desc">E-ticketing platform for Life Football Club with QR-code verification, ABA PayWay checkout, and an admin dashboard for ticket and payment monitoring.</p>
+        <div class="proj-stack"><span class="stack-chip">Laravel</span><span class="stack-chip">PHP</span><span class="stack-chip">MySQL</span><span class="stack-chip">AJAX</span><span class="stack-chip">jQuery</span><span class="stack-chip">ABA PayWay</span></div>
+      </div>
+      <div class="proj-card">
+        <div class="proj-top"><span class="proj-name">Coffee POS System</span></div>
+        <p class="proj-desc">Point-of-sale system for coffee shop operations — product management, inventory tracking, sales processing and reporting, with Telegram bot order alerts.</p>
+        <div class="proj-stack"><span class="stack-chip">Laravel</span><span class="stack-chip">PHP</span><span class="stack-chip">MySQL</span><span class="stack-chip">Telegram Bot</span></div>
+      </div>
+      <div class="proj-card">
+        <div class="proj-top"><span class="proj-name">Shirt POS System</span></div>
+        <p class="proj-desc">Retail POS for product, sales and inventory management, with order processing, reporting, and Telegram transaction notifications.</p>
+        <div class="proj-stack"><span class="stack-chip">Laravel</span><span class="stack-chip">PHP</span><span class="stack-chip">MySQL</span><span class="stack-chip">Telegram Bot</span></div>
+      </div>
+      <div class="proj-card">
+        <div class="proj-top">
+          <span class="proj-name">Life University Website</span>
+          <a class="proj-link" href="https://lifeun.edu.kh" target="_blank" rel="noopener">lifeun.edu.kh ↗</a>
+        </div>
+        <p class="proj-desc">Official university website — content, security and performance management, with Cloudflare and DNS configuration to improve uptime and speed.</p>
+        <div class="proj-stack"><span class="stack-chip">WordPress</span><span class="stack-chip">Cloudflare</span><span class="stack-chip">HTML/CSS/JS</span></div>
+      </div>
+      <div class="proj-card">
+        <div class="proj-top"><span class="proj-name">Student Enrollment System</span></div>
+        <p class="proj-desc">Online enrollment and admission system with a Laravel REST API powering a Flutter mobile app, digital application submission and status tracking.</p>
+        <div class="proj-stack"><span class="stack-chip">Laravel</span><span class="stack-chip">Flutter</span><span class="stack-chip">MySQL</span><span class="stack-chip">REST API</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="education">
+  <div class="wrap">
+    <div class="split">
+      <div class="reveal">
+        <div class="eyebrow">05 — Education</div>
+        <h2 class="section-title" style="margin-bottom:36px;">Education</h2>
+        <div class="edu-item">
+          <div class="edu-school">Life University of Cambodia</div>
+          <div class="edu-degree">Bachelor of Computer Science</div>
+          <div class="edu-date">January 2021 — December 2025</div>
+        </div>
+        <div class="edu-item">
+          <div class="edu-school">Sihanoukville High School</div>
+          <div class="edu-degree">High School Diploma</div>
+          <div class="edu-date">January 2019 — December 2021</div>
+        </div>
+        <div style="margin-top:44px;">
+          <div class="eyebrow">Languages</div>
+          <div class="lang-row" id="langRow">
+            <div class="lang-item"><span class="lang-name">Khmer</span><div class="lang-bar"><div class="lang-bar-fill" data-w="100"></div></div><span class="lang-level">Native</span></div>
+            <div class="lang-item"><span class="lang-name">Chinese</span><div class="lang-bar"><div class="lang-bar-fill" data-w="85"></div></div><span class="lang-level">Advanced</span></div>
+            <div class="lang-item"><span class="lang-name">English</span><div class="lang-bar"><div class="lang-bar-fill" data-w="55"></div></div><span class="lang-level">Intermediate</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="reveal">
+        <div class="eyebrow">06 — Certificates &amp; Awards</div>
+        <h2 class="section-title" style="margin-bottom:36px;">Recognition</h2>
+        <ul class="cert-list">
+          <li>PAUA–Ha Sang Tuk Scholarship Recipient, Life University of Cambodia</li>
+          <li>PAUA Scholarship Award (USD 370), Life University of Cambodia</li>
+          <li>Grade A Recognition in National Examinations — Preah Sihanouk Provincial Administration</li>
+          <li>Chinese Language Certificate, Tai Zhong Chinese Center</li>
+          <li>Certificate of Completion, Digital Electronics Program — KOICA / Life University</li>
+          <li>Certificate of Completion, Game Program Design — KOICA / Life University</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="wrap">
+    <div class="eyebrow" style="color:#8a8a8a;">07 — Contact</div>
+    <h2 class="contact-title reveal">Building something?<br>Let's talk.</h2>
+    <div class="contact-links reveal">
+      <a href="mailto:tainglyhong168@gmail.com">tainglyhong168@gmail.com</a>
+      <a href="tel:+85516860853">+855 16 860 853</a>
+      <a href="https://github.com/tainglyhong" target="_blank" rel="noopener">github.com/tainglyhong</a>
+    </div>
+    <div class="footer-bottom">
+      <span>Taing Lyhong — Sihanoukville, Cambodia</span>
+      <span>Built with Laravel-brain, HTML hands.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Mobile nav toggle
+  const navToggle = document.getElementById('navToggle');
+  const navLinks = document.getElementById('navLinks');
+  navToggle.addEventListener('click', () => navLinks.classList.toggle('open'));
+  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
+
+  // Scroll reveal
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        entry.target.classList.add('in-view');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  revealEls.forEach(el => io.observe(el));
+
+  // Language bars animate once visible
+  const langRow = document.getElementById('langRow');
+  const langIo = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        document.querySelectorAll('.lang-bar-fill').forEach(fill => {
+          fill.style.width = fill.dataset.w + '%';
+        });
+        langIo.disconnect();
+      }
+    });
+  }, { threshold: 0.4 });
+  if(langRow) langIo.observe(langRow);
+</script>
+
+</body>
+</html>
